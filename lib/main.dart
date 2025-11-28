@@ -83,22 +83,15 @@ class _VideoScreenState extends State<VideoScreen> {
           }
 
           return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               AspectRatio(
                 aspectRatio: value.aspectRatio == 0
-                    ? 16 / 9
+                    ? 16/9
                     : value.aspectRatio,
-                child: Stack(
-                  children: [
-                    VideoPlayer(_controller),
-                    Positioned(
-                      bottom: 0,
-                      child: controlCard(value),
-                    ),
-                  ],
-                ),
+                child: VideoPlayer(_controller),
               ),
+              controlCard(value)
             ],
           );
         },
@@ -108,98 +101,114 @@ class _VideoScreenState extends State<VideoScreen> {
 
   Card controlCard(VideoPlayerValue value) {
     return Card(
-                      margin: EdgeInsetsGeometry.all(5),
-                      color: Colors.blueAccent,
-                      child: Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              setState(() {
-                                value.isPlaying
-                                    ? _controller.pause()
-                                    : _controller.play();
-                              });
-                            },
-                            icon: value.isPlaying
-                                ? Icon(Icons.pause)
-                                : Icon(Icons.play_arrow),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              final back =
-                                  value.position - Duration(seconds: 10);
-                              _controller.seekTo(
-                                back > Duration(seconds: 0)
-                                    ? back
-                                    : value.position,
-                              );
-                            },
-                            icon: Icon(Icons.replay_10),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              final forward =
-                                  value.position + Duration(seconds: 10);
-                              _controller.seekTo(
-                                forward > value.duration
-                                    ? value.position
-                                    : forward,
-                              );
-                            },
-                            icon: Icon(Icons.forward_10),
-                          ),
-                          IconButton(
-                            onPressed: () async {
-                              setState(() => _muted = !_muted);
-                              await _controller.setVolume(_muted ? 0.0 : 1.0);
-                            },
-                            icon: _muted
-                                ? Icon(Icons.volume_off)
-                                : Icon(Icons.volume_up),
-                          ),
-                          Expanded(
-                            child: Slider(
-                              value: value.position.inMilliseconds
-                                  .toDouble()
-                                  .clamp(
-                                    0,
-                                    value.duration.inMilliseconds.toDouble(),
-                                  ),
-                              min: 0,
-                              max: value.duration.inMilliseconds == 0
-                                  ? 0
-                                  : value.duration.inMilliseconds.toDouble(),
-                              onChanged: (ms) async {
-                                final pos = Duration(
-                                  milliseconds: ms.toInt(),
-                                );
-                                await _controller.seekTo(pos);
-                                setState(() {});
-                              },
-                            ),
-                          ),
-                          Text(_format(value.position)),
-                          Text("/"),
-                          Text(_format(value.duration)),
-                          IconButton(
-                            onPressed: () {
-                              setState(() => _looping = !_looping);
-                              _controller.setLooping(_looping);
-                            },
-                            icon: _looping
-                                ? Icon(Icons.repeat_one)
-                                : Icon(Icons.repeat),
-                            color: _looping ? Colors.red : Colors.white,
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              setState(() => _fullscreen = !_fullscreen);
-                            },
-                            icon: Icon(Icons.fullscreen),
-                          ),
-                        ],
-                      ),
-                    );
+      elevation: 4,
+      margin: EdgeInsetsGeometry.symmetric(horizontal: 2, vertical: 2),
+      color: Colors.blueAccent,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center ,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          /// Oynat
+          IconButton(
+            iconSize: 22,
+            padding: EdgeInsets.all(3),
+            constraints: const BoxConstraints(),
+            onPressed: () {
+              setState(() {
+                value.isPlaying ? _controller.pause() : _controller.play();
+              });
+            },
+            icon: value.isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
+          ),
+
+          /// Geri Sar
+          IconButton(
+            iconSize: 22,
+            padding: EdgeInsets.all(3),
+            constraints: const BoxConstraints(),
+            onPressed: () {
+              final back = value.position - Duration(seconds: 10);
+              _controller.seekTo(
+                back > Duration(seconds: 0) ? back : value.position,
+              );
+            },
+            icon: Icon(Icons.replay_10),
+          ),
+
+          /// İleri Sar
+          IconButton(
+            iconSize: 22,
+            padding: EdgeInsets.all(3),
+            constraints: const BoxConstraints(),
+            onPressed: () {
+              final forward = value.position + Duration(seconds: 10);
+              _controller.seekTo(
+                forward < value.duration ? forward : value.duration,
+              );
+            },
+            icon: Icon(Icons.forward_10),
+          ),
+
+          /// Ses
+          IconButton(
+            iconSize: 22,
+            padding: EdgeInsets.all(3),
+            constraints: const BoxConstraints(),
+            onPressed: () async {
+              setState(() => _muted = !_muted);
+              await _controller.setVolume(_muted ? 0.0 : 1.0);
+            },
+            icon: _muted ? Icon(Icons.volume_off) : Icon(Icons.volume_up),
+          ),
+
+          Expanded(
+            child: Slider(
+              value: value.position.inMilliseconds.toDouble().clamp(
+                0,
+                value.duration.inMilliseconds.toDouble(),
+              ),
+              min: 0,
+              max: value.duration.inMilliseconds == 0
+                  ? 0
+                  : value.duration.inMilliseconds.toDouble(),
+              onChanged: (ms) async {
+                final pos = Duration(milliseconds: ms.toInt());
+                await _controller.seekTo(pos);
+                setState(() {});
+              },
+            ),
+          ),
+
+          Text(_format(value.position)),
+          Text("/"),
+          Text(_format(value.duration)),
+
+          /// Loop
+          IconButton(
+            iconSize: 22,
+            padding: EdgeInsets.all(3),
+            constraints: const BoxConstraints(),
+            onPressed: () {
+              setState(() => _looping = !_looping);
+              _controller.setLooping(_looping);
+            },
+            icon: _looping ? Icon(Icons.repeat_one) : Icon(Icons.repeat),
+            color: _looping ? Colors.red : Colors.white,
+          ),
+
+          /// Full Ekran
+          IconButton(
+            iconSize: 22,
+            padding: EdgeInsets.all(3),
+            constraints: const BoxConstraints(),
+            onPressed: () {
+              setState(() => _fullscreen = !_fullscreen);
+            },
+            icon: Icon(Icons.fullscreen),
+          ),
+        ],
+      ),
+    );
   }
 }
 
