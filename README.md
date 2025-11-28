@@ -1,16 +1,17 @@
-# video_odev
+# Flutter ile Video Oynatıcı
 
-A new Flutter project.
+Bu proje, Flutter ile geliştirilmiş basit bir video oynatıcı uygulamasıdır.
 
-## Getting Started
+## Özellikler
 
-This project is a starting point for a Flutter application.
+- Videoları ağdan (network) oynatma
+- Oynat/Duraklat kontrolü
+- 10 saniye ileri/geri sarma
+- Ses açma/kapama
+- Video döngüsü (loop) açma/kapama
+- Video ilerleme çubuğu (seek bar) ile videoda gezinme
+- Tam ekran düğmesi (işlevsellik eklenmemiş)
 
-A few resources to get you started if this is your first Flutter project:
+## Kullanılan Paketler
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- [video_player](https://pub.dev/packages/video_player): Videoları oynatmak için temel paket.
