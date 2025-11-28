@@ -10,7 +10,7 @@ Bu proje, Flutter ile geliştirilmiş basit bir video oynatıcı uygulamasıdır
 - Ses açma/kapama
 - Video döngüsü (loop) açma/kapama
 - Video ilerleme çubuğu (seek bar) ile videoda gezinme
-- Tam ekran düğmesi (işlevsellik eklenmemiş)
+- Tam ekran düğmesi
 
 ## Kullanılan Paketler
 
