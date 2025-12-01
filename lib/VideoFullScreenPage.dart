@@ -31,8 +31,8 @@ class _FullScreenPlayerState extends State<FullScreenPlayer> {
 
   @override
   void initState() {
-    super.initState();
     _enterFullScreen();
+    super.initState();
   }
 
   @override
